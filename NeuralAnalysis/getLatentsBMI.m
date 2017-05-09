@@ -148,6 +148,7 @@ function [spikes,St,Ndims] = loadNeuralData(yrclass,datafile,mods,Fs)
 if any(strcmp(datafile(1:4),{'Indy','Loco','Jack'}))
     % chan_names        cell array of names, ie 'M1 001'
     % cursor_pos        cursor position, sampled at 250 Hz [t by 2]
+    % target_pos        target position, 250 Hz [t by 2]
     % finger_pos        finger position, 250 Hz [t by 3]
     % spikes            cell array of spike times (seconds) {channel,unit}
     % t                 timebase for kinematics, seconds
@@ -156,7 +157,9 @@ if any(strcmp(datafile(1:4),{'Indy','Loco','Jack'}))
     Norder = 3;
     
     % load
-    load([getdir('data'),datafile],'cursor_pos','spikes','t');
+    load([getdir('data'),datafile], ...
+        'cursor_pos','target_pos','spikes','t');
+    
     X = cursor_pos;
     Ndims = size(X,2);
     
@@ -164,10 +167,44 @@ if any(strcmp(datafile(1:4),{'Indy','Loco','Jack'}))
     St(1).X = X;
     for iOrder = 2:Norder
         X = diff(X)*Fs;
-        X = [X; X(end,:)];
-        St(1).X = [St(1).X,X];
+        X = [X ; X(end,:)];
+        St(1).X = [St(1).X X];
     end
     St(1).t = t;
+    
+    %%%% begin intention estimation
+    %%%%
+    
+    target_radius = 3.75; % [mm] hardcoded
+    
+    norm2 = @(x)sqrt(sum(x.^2, 2)); % assumes data are in columns
+    
+    g  = o.target_pos;
+    TrueVec = g - St(1).X(:,1:2);
+    TrueUnit = bsxfun(@rdivide, TrueVec, norm2(TrueVec));
+    v = St(1).X(:,3:4);
+    v = bsxfun(@times, TrueUnit, norm2(v));
+    % zero out velocity when inside the target
+    %ii = all(arrayfun(@abs, TrueVec) < target_size, 2); % square box
+    ii = norm2(TrueVec) < target_radius;	% circle
+    v(ii,:) = zeros(sum(ii),2);
+    St(1).X(:,3:4) = v;
+    
+    %%%%
+    %%%% end intention estimation
+    
+    %%%% begin kinematic lag
+    %%%%
+    
+    lag = 0.050; % hardcoded
+    
+    if (lag ~= 0)
+        St(1).X  = double(resample_discont(...
+            St(1).X, St(1).t, St(1).t + lag));
+    end
+    
+    %%%%
+    %%%% end kinematic lag
     
     
 elseif strcmp(datafile(1:6),'Chewie')
