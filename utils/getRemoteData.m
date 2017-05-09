@@ -10,7 +10,7 @@ function getRemoteData(filename,serverloc,clientloc)
 
 if ~exist([clientloc,filename],'file')
     if strcmp(computer,'GLNXA64')
-        command = ['scp makin@7layerburrito.cin.ucsf.edu:',...
+        command = ['cp ',...
             serverloc,filename,' ',clientloc,'.'];
         unix(command);
     else
