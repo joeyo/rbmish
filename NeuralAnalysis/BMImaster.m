@@ -15,7 +15,7 @@
 clc; clear;
 %decodernames = {'static','kfobs','kfemstatic','kfemdynamic','ukf',...
 %    'refhstatic','refhdynamic'};
-decodernames = {'refhstatic','refhdynamic'};
+decodernames = {'kfobs', 'refhstatic','refhdynamic'};
 
 
 
@@ -76,7 +76,7 @@ for iSession = 1:Nsessions
             filename = sprintf('spikes_and_kinematics_%s_%02d.mat',...
                 session,seqnums(iSession));
     end
-    serverloc = sprintf('../../sabes_data2/joeyo/data/%s/%s/%s/%s/processed/',...
+    serverloc = sprintf('/mnt/minniedata2/data/%s/%s/%s/%s/processed/',...
         lower(monkey),year,month,session);
     getRemoteData(filename,serverloc,clientloc);
     filesuffix = sprintf('%s%s%s_%02d.mat',year,month,day,seqnums(iSession));
