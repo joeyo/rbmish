@@ -23,6 +23,8 @@ switch dirtype
                 yrdir = 'C:\Users\makin\Data\';
             case 'domestica'
                 yrdir = '~/data/';
+			case 'drumkit'
+				ydir = '/tmp/';
             otherwise
                 %%%error('unrecognized machine! -- jgm');
                 fprintf('unrecognized machine! -- assuming domestica...\n');
@@ -36,6 +38,8 @@ switch dirtype
                 yrdir = 'C:\Users\makin\code\';
 			case 'domestica'
 				yrdir = '~/code/';
+			case 'drumkit'
+				yrdir = '~/rbmish/';
             otherwise
                 %%%error('unrecognized machine! -- jgm');
                 fprintf('unrecognized machine! -- assuming domestica...\n');
