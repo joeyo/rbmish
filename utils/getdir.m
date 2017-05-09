@@ -39,7 +39,7 @@ switch dirtype
 			case 'domestica'
 				yrdir = '~/code/';
 			case 'drumkit'
-				yrdir = '~/rbmish/';
+				yrdir = '~/sw/rbmish/';
             otherwise
                 %%%error('unrecognized machine! -- jgm');
                 fprintf('unrecognized machine! -- assuming domestica...\n');
