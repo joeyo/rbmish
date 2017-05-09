@@ -24,7 +24,7 @@ switch dirtype
             case 'domestica'
                 yrdir = '~/data/';
 			case 'drumkit'
-				ydir = '/tmp/';
+				yrdir = '/tmp/';
             otherwise
                 %%%error('unrecognized machine! -- jgm');
                 fprintf('unrecognized machine! -- assuming domestica...\n');
